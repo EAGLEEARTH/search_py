@@ -127,20 +127,22 @@ def scroll_down_page(page):
     wait_timeout = True
     while (scroll_height - scroll_top) > (scroll_pixel * 3):
         page.evaluate(f"window.scrollBy(0,{scroll_pixel})")
-        if wait_timeout:
-            page.wait_for_timeout(scrolling_time)
         scroll_top = page.evaluate("window.scrollY")
         scroll_height = page.evaluate(f"document.querySelector('{selector}').scrollHeight")
-        page.wait_for_timeout(3000)
-    return scroll_top
+        if scroll_top == 0 or scroll_top < 100:
+            print("scroll break")
+            break
+        else:
+            page.wait_for_timeout(scrolling_time)
+            page.wait_for_timeout(3000)
+        
+    return 
 
 def click_button_action(page,search_link_google): 
     selector = "a"
     button_selector = page.query_selector_all(selector)
     button_count = len(button_selector)
     
-    
-
     if button_count > 5:
         for button in range(0,5):
             #print(button,"----")
@@ -157,6 +159,23 @@ def click_button_action(page,search_link_google):
         page.goto(search_link_google)
         page.wait_for_timeout(3000)  
 
+    else:
+        for button in range(0,button_count):
+            #print(button,"----")
+            try:
+                if page.evaluate(f"document.querySelectorAll('a')[{button}].click();"):
+                    page.wait_for_timeout(6000)  
+                    page.go_back()
+            except:
+                print("next button not found")
+                page.wait_for_timeout(6000)  
+                page.reload()  
+            print("check")
+
+        page.goto(search_link_google)
+        page.wait_for_timeout(3000)  
+
+
 def options_json():
     with open("./options.json","r") as f:
         options_data = json.loads(f.read()) 
@@ -172,12 +191,12 @@ if __name__ == "__main__":
     scrolling_time = options_data.get("options").get("scrolling_time")
     search_page_visi_count = options_data.get("options").get("search_page_visi_count")
     href_selector_click = options_data.get("options").get("href_selector_click")
-    job()
-    # schedule.every(working_time).minutes.do(job)
-    # print("hello")
-    # while True:
-    #     if schedule.run_pending():
-    #         time.sleep(1)
+    #job()
+    schedule.every(working_time).minutes.do(job)
+    print("hello")
+    while True:
+        if schedule.run_pending():
+            time.sleep(1)
 
         
         
