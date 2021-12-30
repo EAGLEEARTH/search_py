@@ -109,7 +109,7 @@ def href_selector_all(page):
 def page_back_next(page):
     base_url = "https://www.google.com"
     new_button_selector = "div.MUFPAc div.hdtb-mitem:nth-child(2) a"
-    all_button_selector = "div.MUFPAc div.hdtb-mitem:nth-child(1) a"
+    all_button_selector = "div.MUFPAc div.hdtb-mitem:nth-child(1) a,div.T47uwc a.NZmxZe:nth-child(1)"
     page.click(new_button_selector)
     page.wait_for_timeout(3000)
     go_back_page = page.query_selector(all_button_selector) 
@@ -182,10 +182,7 @@ def options_json():
     return options_data
 
 if __name__ == "__main__":
-
-    
     options_data = options_json()
-
     working_time = options_data.get("options").get("working_time")
     visit_page_time = options_data.get("options").get("page_visit_time")
     scrolling_time = options_data.get("options").get("scrolling_time")
