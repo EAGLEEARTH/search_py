@@ -85,28 +85,39 @@ def page_escape_click(page, text=None):
     page.wait_for_timeout(3000)
     
 def href_selector_all(page):
-    
     selector = href_selector_click
     search_link_ = page.query_selector_all(selector)
     count_link = len(search_link_)
     href_count = search_page_visi_count
+    search_link_google = page_back_next(page)
     if href_count <= count_link:
         for link_count in range(0, href_count):
-            
             item = page.query_selector_all(selector)[link_count]
             if item:
-                print("item True")
+                #print("item True")
                 item.click()
                 page.wait_for_timeout(3000)
                 page_escape_click(page)
                 page.reload()
-                page.set_default_navigation_timeout(3000)
+                page.set_default_navigation_timeout(50000)
                 scroll_down_page(page)
-                click_button_action(page)
+                click_button_action(page,search_link_google)
                 page.wait_for_timeout(visit_page_time)
+                time.sleep(5)
                 #page.go_back()
             
-
+def page_back_next(page):
+    base_url = "https://www.google.com"
+    new_button_selector = "div.MUFPAc div.hdtb-mitem:nth-child(2) a"
+    all_button_selector = "div.MUFPAc div.hdtb-mitem:nth-child(1) a"
+    page.click(new_button_selector)
+    page.wait_for_timeout(3000)
+    go_back_page = page.query_selector(all_button_selector) 
+    go_back_link= go_back_page.get_attribute("href")
+    google_search_link = base_url + go_back_link
+    page.click(all_button_selector)
+    page.wait_for_timeout(3000)
+    return google_search_link
 
 def scroll_down_page(page):
     scroll_top = page.evaluate("window.scrollY")
@@ -123,24 +134,28 @@ def scroll_down_page(page):
         page.wait_for_timeout(3000)
     return scroll_top
 
-
-def click_button_action(page): 
-    selector = "button"
+def click_button_action(page,search_link_google): 
+    selector = "a"
     button_selector = page.query_selector_all(selector)
     button_count = len(button_selector)
-    print("button_sount",button_count)
-    if button_count > 3:
-        for button in range(0,3):
-            print(button,"----")
+    
+    
+
+    if button_count > 5:
+        for button in range(0,5):
+            #print(button,"----")
             try:
-                if page.evaluate(f"document.querySelectorAll('button')[{button}].click();"):
+                if page.evaluate(f"document.querySelectorAll('a')[{button}].click();"):
                     page.wait_for_timeout(6000)  
                     page.go_back()
             except:
                 print("next button not found")
                 page.wait_for_timeout(6000)  
-                page.go_back()  
+                page.reload()  
+            print("check")
 
+        page.goto(search_link_google)
+        page.wait_for_timeout(3000)  
 
 def options_json():
     with open("./options.json","r") as f:
