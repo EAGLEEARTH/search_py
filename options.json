@@ -1,0 +1,9 @@
+{
+    "options":{
+        "working_time":10,
+        "page_visit_time":5000,
+        "scrolling_time":7200,
+        "search_page_visi_count":5,
+        "href_selector_click":"div#center_col div.yuRUbf > a"
+    }
+}
