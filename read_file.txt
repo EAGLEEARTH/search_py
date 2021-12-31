@@ -1,1 +1,1 @@
-news,dolar,euro,book,https://www.python.org/, python, dolar kuru, excell, sigara, zamlar, windows 11, işletim sistemleri
+news,book,https://www.python.org/, python, excell, sigara, zamlar, windows 11, işletim sistemleri,çay bardağı, su bardağı, çeyiz takımı, fincan takımı, küllük, peştemal, laptop, pc kasası, ekran kartı

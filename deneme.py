@@ -14,6 +14,7 @@ import pickle
 import schedule
 import time
 
+
 user_dir = '/tmp/playwright'
 
 def job():
@@ -23,17 +24,35 @@ def job():
         read_file(text)
 
 def read_file(text):
-    
+    counter = 0
     if text:
         text_split = text.split(",")
-        for link in text_split:
-            if "http" in link or "www" in link:
-                if link:
-                    open_browser(link)
-            else:
-                text = link
-                link = "https://www.google.com.tr/?hl=tr"
-                open_browser(link,text)
+        text_count = len(text_split)
+        while True:
+            for link in text_split:
+                counter +=1
+                total = counter % 10 
+                if total == 0:
+                    time.sleep(600)
+                    if "http" in link or "www" in link:
+                        if link:
+                            #open_browser(link)
+                            print(link)
+                    else:
+                        text = link
+                        link = "https://www.google.com.tr/?hl=tr"
+                        #open_browser(link,text)
+                        print(link,text)
+                else:
+                    if "http" in link or "www" in link:
+                        if link:
+                            #open_browser(link)
+                            print(link)
+                    else:
+                        text = link
+                        link = "https://www.google.com.tr/?hl=tr"
+                        #open_browser(link,text)
+                        print(link,text)
 
 def open_browser(link,text=None):
     if not os.path.exists(user_dir):
@@ -52,7 +71,7 @@ def open_browser(link,text=None):
                 page.wait_for_timeout(3000)
                 page_content = page.content()
                 soup = BeautifulSoup(page_content, 'html.parser')
-                print("scroll not working")
+                scroll_down_page(page)
                 input_text(page,text)
                 page_enter_click(page, text)
                 href_selector_all(page)
@@ -140,15 +159,16 @@ def scroll_down_page(page):
     return 
 
 def click_button_action(page,search_link_google=None): 
-    selector = "a"
+    selector = "a:not([target])"
     button_selector = page.query_selector_all(selector)
+    
     button_count = len(button_selector)
     
     if button_count > 5:
         for button in range(0,5):
             #print(button,"----")
             try:
-                if page.evaluate(f"document.querySelectorAll('a')[{button}].click();"):
+                if page.evaluate(f"document.querySelectorAll(a:not([target]))[{button}].click();"):
                     page.wait_for_timeout(6000)  
                     page.go_back()
             except:
@@ -164,7 +184,7 @@ def click_button_action(page,search_link_google=None):
         for button in range(0,button_count):
             #print(button,"----")
             try:
-                if page.evaluate(f"document.querySelectorAll('a')[{button}].click();"):
+                if page.evaluate(f"document.querySelectorAll(a:not([target]))[{button}].click();"):
                     page.wait_for_timeout(6000)  
                     page.go_back()
             except:
@@ -189,12 +209,10 @@ if __name__ == "__main__":
     scrolling_time = options_data.get("options").get("scrolling_time")
     search_page_visi_count = options_data.get("options").get("search_page_visi_count")
     href_selector_click = options_data.get("options").get("href_selector_click")
-    #job()
-    schedule.every(working_time).minutes.do(job)
-    print("hello")
-    while True:
-        if schedule.run_pending():
-            time.sleep(1)
-
-        
+    job()
+    # schedule.every(working_time).minutes.do(job)
+    # print("hello")
+    # while True:
+    #     if schedule.run_pending():
+    #         time.sleep(1)
         
