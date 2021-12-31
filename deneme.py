@@ -45,12 +45,12 @@ def read_file(text):
                 else:
                     if "http" in link or "www" in link:
                         if link:
-                            #open_browser(link)
+                            open_browser(link)
                             print(link)
                     else:
                         text = link
                         link = "https://www.google.com.tr/?hl=tr"
-                        #open_browser(link,text)
+                        open_browser(link,text)
                         print(link,text)
 
 def open_browser(link,text=None):
