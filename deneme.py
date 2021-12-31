@@ -65,6 +65,7 @@ def open_browser(link,text=None):
                 page_content = page.content()
                 soup = BeautifulSoup(page_content, 'html.parser')
                 scroll_down_page(page)
+                click_button_action(page)
                 page.wait_for_timeout(visit_page_time)
                 
             browser.close()
@@ -138,7 +139,7 @@ def scroll_down_page(page):
         
     return 
 
-def click_button_action(page,search_link_google): 
+def click_button_action(page,search_link_google=None): 
     selector = "a"
     button_selector = page.query_selector_all(selector)
     button_count = len(button_selector)
@@ -155,9 +156,9 @@ def click_button_action(page,search_link_google):
                 page.wait_for_timeout(6000)  
                 page.reload()  
             print("check")
-
-        page.goto(search_link_google)
-        page.wait_for_timeout(3000)  
+        if search_link_google:
+            page.goto(search_link_google)
+            page.wait_for_timeout(3000)  
 
     else:
         for button in range(0,button_count):
@@ -172,9 +173,9 @@ def click_button_action(page,search_link_google):
                 page.reload()  
             print("check")
 
-        page.goto(search_link_google)
-        page.wait_for_timeout(3000)  
-
+        if search_link_google:
+            page.goto(search_link_google)
+            page.wait_for_timeout(3000)   
 
 def options_json():
     with open("./options.json","r") as f:
